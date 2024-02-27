@@ -34,6 +34,7 @@ Then you will have your script in Enums Folder
 
 ## Contact
 - Visit my YouTube channel: [NDDEV Game](https://www.youtube.com/@nddevgame) for more content.
+- Support me at : https://www.patreon.com/NDDEVGAME.
 - Like, share, and subscribe.
 
 P/s: If you need something or find out any bug, ib me so i can provide you the best tool. I tend to code a new Window Editor for my tool. But ... I lazy.
