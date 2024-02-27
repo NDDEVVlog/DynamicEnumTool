@@ -36,7 +36,7 @@ Then you will have your script in Enums Folder
 - Visit my YouTube channel: [NDDEV Game](https://www.youtube.com/@nddevgame) for more content.
 - Like, share, and subscribe.
 
-P/s: This tool contains the whole Odin Inspector. Don't notice that. I tend to code a new Window Editor for my tool. But ... I lazy.
+P/s: If you need something or find out any bug, ib me so i can provide you the best tool. I tend to code a new Window Editor for my tool. But ... I lazy.
 Thanks.
 
 
