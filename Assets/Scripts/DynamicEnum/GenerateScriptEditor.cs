@@ -1,6 +1,6 @@
 using UnityEditor;
 using UnityEngine;
-using Sirenix.OdinInspector;
+
 
 [CustomEditor(typeof(GenerateScript))]
 public class GenerateScriptEditor : Editor
