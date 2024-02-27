@@ -12,15 +12,20 @@ public class EnumScriptableObjectEditor : Editor
 
         GUILayout.Space(10);
 
-        if (GUILayout.Button("Fill String"))
+        if (GUILayout.Button("Load Enum"))
         {
             enumScriptableObject.FillString();
             EditorUtility.SetDirty(enumScriptableObject);
         }
 
-        if (GUILayout.Button("Fill Enum"))
+        if (GUILayout.Button("Generate Enum"))
         {
             enumScriptableObject.FillEnum();
+            EditorUtility.SetDirty(enumScriptableObject);
+        }
+        if (GUILayout.Button("Toggle Static Enum Field"))
+        {
+            enumScriptableObject.ToggleStaticEnumField();
             EditorUtility.SetDirty(enumScriptableObject);
         }
     }

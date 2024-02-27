@@ -96,9 +96,59 @@ public class GenerateEnum : MonoBehaviour
 
         AssetDatabase.Refresh();
     }
+    public static void ToggleStaticEnumField(ScriptableObject script, Type theEnum, string fieldName, ref bool isStatic)
+    {
+        if (!theEnum.IsEnum)
+        {
+            throw new ArgumentException("The provided type is not an enum.");
+        }
+
+        string enumName = theEnum.Name;
+
+        // Get the path to the script file
+        MonoScript scriptObject = MonoScript.FromScriptableObject(script);
+        string scriptPath = AssetDatabase.GetAssetPath(scriptObject);
+
+        // Read existing content
+        string[] lines = File.Exists(scriptPath) ? File.ReadAllLines(scriptPath) : new string[0];
+
+        // Find the line number of the enum field declaration
+        string staticFieldDeclaration = $"public static {enumName} {fieldName};";
+        string nonStaticFieldDeclaration = $"public {enumName} {fieldName};";
+
+        int lineIndex = -1;
+
+        for (int i = 0; i < lines.Length; i++)
+        {
+            if (lines[i].Contains(staticFieldDeclaration) || lines[i].Contains(nonStaticFieldDeclaration))
+            {
+                lineIndex = i;
+                break;
+            }
+        }
+
+        if (lineIndex == -1)
+        {
+            // If the field is not found, log an error
+            Debug.LogError($"'{fieldName}' not found in {scriptPath}");
+            return;
+        }
+
+        // Determine if 'static' is already present
+        isStatic =! lines[lineIndex].Contains(staticFieldDeclaration);
+
+        // Replace the existing line with the modified one
+        lines[lineIndex] = !isStatic ? lines[lineIndex].Replace(staticFieldDeclaration, nonStaticFieldDeclaration) : lines[lineIndex].Replace(nonStaticFieldDeclaration, staticFieldDeclaration);
+
+        // Write the modified content back to the file
+        File.WriteAllLines(scriptPath, lines);
+
+        AssetDatabase.Refresh();
+    }
 
 
-[MenuItem("Tools/GenerateEnum")]
+
+    [MenuItem("Tools/GenerateEnum")]
     public static void FillEnum(Type script, Type theEnum, List<string> enumEntries)
     {
         if (enumEntries == null)

@@ -9,7 +9,6 @@ public class GenerateScript : ScriptableObject
     public string scriptName = "ScriptName";
     public string enumName = "EnumName";
 
-    
     public void Generate()
     {
         GeneratorScript(scriptName, enumName);
@@ -27,7 +26,7 @@ using UnityEngine;
 public class {scriptName} : EnumScriptableObject
 {{
     public List<string> {scriptName.ToLower()}String;
-
+    public bool isStatic = false;
     public enum {enumName}
     {{
         // Add your enum values here
@@ -35,6 +34,12 @@ public class {scriptName} : EnumScriptableObject
 
     public {enumName} {scriptName.ToLower()};
     
+
+
+
+
+
+
     public override void FillString()
     {{
         GenerateEnum.FillStringEnumList({scriptName.ToLower()}String, typeof({enumName}));
@@ -43,6 +48,11 @@ public class {scriptName} : EnumScriptableObject
     public override void FillEnum()
     {{
         GenerateEnum.FillEnum(this, typeof({enumName}), {scriptName.ToLower()}String);
+    }}
+
+    public override void ToggleStaticEnumField()
+    {{
+        GenerateEnum.ToggleStaticEnumField(this, typeof({enumName}), nameof({scriptName.ToLower()}), ref isStatic);
     }}
 }}
 ";
@@ -54,7 +64,25 @@ public class {scriptName} : EnumScriptableObject
 
         // Refresh the AssetDatabase to reflect the changes in the Unity Editor
         AssetDatabase.Refresh();
-
         Debug.Log($"Script '{scriptName}.cs' created at: {filePath}");
+        // Create the asset file
+        CreateAsset(scriptName, filePath);
+
+       
+    }
+
+    private void CreateAsset(string scriptName, string scriptPath)
+    {
+        // Instantiate the scriptable object
+        ScriptableObject scriptableObject = ScriptableObject.CreateInstance(scriptName);
+
+        // Create the asset file
+        string assetPath = $"Assets/Enums/{scriptName}.asset";
+        AssetDatabase.CreateAsset(scriptableObject, assetPath);
+
+        // Refresh the AssetDatabase
+        AssetDatabase.Refresh();
+
+        Debug.Log($"Asset '{scriptName}.asset' created at: {assetPath}");
     }
 }
