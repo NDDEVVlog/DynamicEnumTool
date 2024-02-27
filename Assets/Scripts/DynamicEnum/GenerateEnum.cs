@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class GenerateEnum : MonoBehaviour
 {
-    [MenuItem("ND/Tools/GenerateEnumFolder")]
+    [MenuItem("ND/Tools/DynamicEnum/GenerateEnumFolder")]
     public static void CreateEnumFolder()
     {
         string targetFolder = "Enums";
@@ -99,8 +99,13 @@ public class GenerateEnum : MonoBehaviour
 
 
 [MenuItem("Tools/GenerateEnum")]
-	public static void FillEnum(Type script,Type theEnum, List<string> enumEntries)
-	{
+    public static void FillEnum(Type script, Type theEnum, List<string> enumEntries)
+    {
+        if (enumEntries == null)
+        {
+            throw new ArgumentNullException(nameof(enumEntries), "The provided enumEntries list is null.");
+        }
+
         if (!theEnum.IsEnum)
         {
             throw new ArgumentException("The provided type is not an enum.");
@@ -139,38 +144,60 @@ public class GenerateEnum : MonoBehaviour
             }
 
             // Write new or modified enum entries
-            for (int i = 0; i < enumEntries.Count; i++)
+            if (enumEntries != null)
             {
-                streamWriter.WriteLine("    " + enumEntries[i] + ",");
+                for (int i = 0; i < enumEntries.Count; i++)
+                {
+                    streamWriter.WriteLine("    " + enumEntries[i] + ",");
+                }
             }
 
             streamWriter.WriteLine("}");
         }
 
         AssetDatabase.Refresh();
-    
     }
-	public static void FillStringEnumList(List<string> listString, Type enumType)
+
+    public static void FillStringEnumList(List<string> listString, Type enumType)
     {
-		if (!enumType.IsEnum)
-		{
-			throw new ArgumentException("The provided type is not an enum.");
-		}
+        if (listString == null)
+        {
+            listString = new List<string>();
+        }
 
-		string[] enumNames = Enum.GetNames(enumType);
+        if (!enumType.IsEnum)
+        {
+            throw new ArgumentException("The provided type is not an enum.");
+        }
 
-		foreach (string enumName in enumNames)
-		{
-			// Check if the enumName is not already in the list before adding
-			if (!listString.Contains(enumName))
-			{
-				listString.Add(enumName);
-			}
-		}
-	}
+        string[] enumNames = Enum.GetNames(enumType);
+
+        foreach (string enumName in enumNames)
+        {
+            // Check if the enumName is not already in the list before adding
+            if (!listString.Contains(enumName))
+            {
+                listString.Add(enumName);
+            }
+        }
+    }
     [MenuItem("Sora/Tools")]
     public void SoraPart()
     {
 
     }
+
+    [MenuItem("ND/Tools/DynamicEnum/Open Enums Folder")]
+    public static void OpenEnumsFolder()
+    {
+        string targetFolder = "Assets/Enums";
+        UnityEngine.Object obj = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(targetFolder);
+        Selection.activeObject = obj;
+
+        if (obj != null)
+        {
+            EditorGUIUtility.PingObject(obj);
+        }
+    }
+
 }

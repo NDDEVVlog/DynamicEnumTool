@@ -1,34 +1,30 @@
-using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using System.IO;
-using UnityEditor;
-using Sirenix.OdinInspector;
-[CreateAssetMenu(menuName = "NDTool/EnumGenerater")]
+
+[CreateAssetMenu(menuName = "NDTool/DynamicEnum/EnumGenerater")]
 public class GenerateScript : ScriptableObject
-{   
+{
     public string scriptName = "ScriptName";
     public string enumName = "EnumName";
 
-
-    [Button("Generate")]
+    
     public void Generate()
     {
         GeneratorScript(scriptName, enumName);
     }
 
-
-    public  void GeneratorScript(string scriptName, string enumName)
+    public void GeneratorScript(string scriptName, string enumName)
     {
         string scriptContent = $@"
 using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using Sirenix.OdinInspector;
 
-[CreateAssetMenu]
-public class {scriptName} : ScriptableObject
+[CreateAssetMenu(menuName = ""NDTool/DynamicEnum/EnumList/{scriptName}"")]
+public class {scriptName} : EnumScriptableObject
 {{
     public List<string> {scriptName.ToLower()}String;
 
@@ -39,14 +35,12 @@ public class {scriptName} : ScriptableObject
 
     public {enumName} {scriptName.ToLower()};
     
-    [Button(""FillString"")]
-    public void FillString()
+    public override void FillString()
     {{
         GenerateEnum.FillStringEnumList({scriptName.ToLower()}String, typeof({enumName}));
     }}
 
-    [Button(""FillEnum"")]
-    public void FillEnum()
+    public override void FillEnum()
     {{
         GenerateEnum.FillEnum(this, typeof({enumName}), {scriptName.ToLower()}String);
     }}
